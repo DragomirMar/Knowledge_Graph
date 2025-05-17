@@ -36,3 +36,8 @@ pip install -r requirements.txt
 ```bash
 python main.py
 ```
+
+## Run in virtual environment
+```bash
+venv/bin/python main.py
+```

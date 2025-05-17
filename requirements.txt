@@ -2,3 +2,5 @@ pypdf==5.4.0
 langchain_community==0.3.21
 beautifulsoup4==4.13.3
 llama_index.llms.ollama
+matplotlib
+pygraphviz
