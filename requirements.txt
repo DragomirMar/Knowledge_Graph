@@ -4,3 +4,4 @@ beautifulsoup4==4.13.3
 llama_index.llms.ollama
 matplotlib
 pygraphviz
+streamlit
