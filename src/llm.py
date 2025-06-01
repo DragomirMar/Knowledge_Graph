@@ -59,7 +59,7 @@ class OllamaModel:
 class HuggingFaceLLM:
     API_URL = "https://router.huggingface.co/novita/v3/openai/chat/completions"
     headers = {
-        "Authorization": "Bearer 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",
+        "Authorization": "Bearer add_token_here",
     }
 
     def query(payload):
