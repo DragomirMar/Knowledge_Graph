@@ -32,35 +32,14 @@ class VectorDatabase:
 
     def clear_database(self):
         self.vector_store.reset_collection()
-
-    # def get_triplets(self):
-    #     all_data = self.vector_store.get(include=["documents"])
- 
-    #     # Extract triplets from documents
-    #     triplets = []
-    #     for document in all_data["documents"]:
-    #         triplets.append(document.page_content)
-    #     #     triplet = document.page_content.split(' ', 2)  # Split into subject, predicate, object
-    #     #     if len(triplet) == 3:
-    #     #         triplets.append(tuple(triplet))
-    #     #     else:
-    #     #         triplets.append(("incomplete", "triplet", "data"))
-
-    #     # return triplets if triplets else ["database is empty"]
-
-    # def get_all_triples(self) -> List[Tuple[str, str, str]]:
-    #     docs = self.vector_store.get(include=["documents", "metadatas"])
-    #     triples = []
-    #     for doc in docs["documents"]:
-    #         parts = doc.split(" ", 2)  # splits into [subject, relation, object]
-    #         if len(parts) == 3:
-    #             triples.append(tuple(parts))
-    #     return triples
+    
+    def similarity_search(self, query: str, k: int = 5) -> List[str]:
+        results = self.vector_store.similarity_search(query, k=k)
+        return [doc.page_content for doc in results]
 
     def get_sources(self):
         all_data = self.vector_store.get(include=["metadatas"])
 
-        # Extract sources from metadata
         sources = set()
         for metadata in all_data["metadatas"]:
             source = metadata.get("source")
@@ -68,5 +47,4 @@ class VectorDatabase:
                 sources.add(source)
             else:
                 sources.add("unknown source")
-
-        return sources if sources else ["database is empty"]
+        return sources if sources else ["DATABASE IS EMPTY!"]

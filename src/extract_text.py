@@ -21,18 +21,14 @@ def extract_from_pdf(file):
     return split_docs
     
 def extract_from_url(url):
-    # Send a GET request to the webpage
     response = requests.get(url)
     response.raise_for_status()
     
-    # Parse the webpage content with BeautifulSoup
     soup = BeautifulSoup(response.content, 'html.parser')
-    
     main = soup.find('main')
-    text = main.get_text(separator=" ")
-
-    # Clean up any extra whitespace
-    cleaned_text = ' '.join(text.split())
-    chunks = text_splitter.create_documents([cleaned_text], metadatas=[{"source": url}])
     
-    return chunks
+    text = main.get_text(separator=" ")
+    cleaned_text = ' '.join(text.split())
+    
+    split_docs = text_splitter.create_documents([cleaned_text], metadatas=[{"source": url}])    
+    return split_docs

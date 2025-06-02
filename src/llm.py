@@ -44,7 +44,7 @@ class OllamaModel:
             # Evaluate the response as a Python list safely
             triples = ast.literal_eval(response.strip())
 
-             # Only keep tuples that are of length 3
+            # Only keep tuples that are of length 3 and triples with no none values
             if isinstance(triples, list):
                 valid_triples = [
                     t for t in triples 
@@ -54,7 +54,6 @@ class OllamaModel:
         except Exception as e:
             print("⚠️ Failed to parse triples:", e)
 
-        return []
 
 class HuggingFaceLLM:
     API_URL = "https://router.huggingface.co/novita/v3/openai/chat/completions"
@@ -115,11 +114,13 @@ class HuggingFaceLLM:
         try:
             # Evaluate the response as a Python list safely
             triples = ast.literal_eval(response.strip())
-            # Only keep tuples that are of length 3
+
+            # Only keep tuples that are of length 3 and triples with no none values
             if isinstance(triples, list):
-                valid_triples = [t for t in triples if isinstance(t, tuple) and len(t) == 3]
+                valid_triples = [
+                    t for t in triples 
+                    if isinstance(t, tuple) and len(t) == 3 and all(part is not None for part in t)
+                ]
                 return valid_triples
         except Exception as e:
             print("⚠️ Failed to parse triples:", e)
-
-        return []
