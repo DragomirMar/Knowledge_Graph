@@ -3,6 +3,7 @@ import networkx as nx
 from networkx.drawing.nx_agraph import graphviz_layout
 from typing import List, Tuple
 import textwrap
+import io
 
 class GraphPlot:
 
@@ -70,7 +71,12 @@ class GraphPlot:
             font_size= max(6, 150 // n_nodes)
         )
 
-        plt.title("Knowledge Graph", fontsize=14)
         plt.axis("off")
         plt.tight_layout()
-        plt.show()
+        
+        # Save to buffer
+        buf = io.BytesIO()
+        plt.savefig(buf, format="png")
+        plt.close()
+        buf.seek(0)
+        return buf

@@ -3,6 +3,7 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from typing import List, Tuple
 from uuid import uuid4
+from collections import defaultdict
 
 embeddings = OllamaEmbeddings(
     model="nomic-embed-text",
@@ -15,6 +16,18 @@ class VectorDatabase:
             collection_name="my_collection",
             embedding_function=embeddings,   
         )
+        
+        
+    def get_all_triplets_by_source(self):
+        # Access the underlying ChromaDB collection
+        results = self.vector_store.get()
+        documents_only = results['documents']
+        parsed_triplets = [tuple(entry.split(" | ")) for entry in documents_only]
+
+        print(f'get_all_triplets_by_source results {parsed_triplets}')
+        
+        return parsed_triplets
+    
     
     def add_document_triplets(self, triples, source):
         print(f'''add_document_triplets params
@@ -22,7 +35,7 @@ class VectorDatabase:
         {triples}
         ''')
 
-        documents = [Document(page_content=' '.join(triplet), metadata={"source":source}, id=idx) for idx, triplet in enumerate(triples)]
+        documents = [Document(page_content=' | '.join(triplet), metadata={"source":source}, id=idx) for idx, triplet in enumerate(triples)]
         
         print(f'add_document_triplets docs {documents}')
         # print(f'add_document_triplets embeds {embeddings.embed_query("Test triple")}')

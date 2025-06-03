@@ -35,6 +35,8 @@ class OllamaModel:
             ...
         ]
         Output only the list of triples.
+        
+        Extract only the 20 most important triples.
         """
 
         response = self.inference(prompt)

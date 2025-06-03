@@ -58,10 +58,9 @@ def process_url(url):
     print("URL content added successfully")
 
 def show_knowledge_graph():
-    #HARD CODED IMPLEMENTATION
-    st.image("../data/KG.png", caption="Knowledge Graph")
-    #REAL IMPLEMENTATION
-    
+    all_triples = db.get_all_triplets_by_source()
+    image_buffer = gp.plot(all_triples)
+    st.image(image_buffer, caption="Knowledge Graph")  
 
 # Title
 st.set_page_config(page_title="KG ChatBot")
@@ -84,16 +83,20 @@ if st.button("Confirm URL"):
         st.warning("Please enter a valid URL.")
 
 
-if st.button("Clear Database"):
-    clear_database()
-    
-if st.button("Show Sources"):
-    show_sources()
-        
+col1, col2 = st.columns([1,1]) 
+with col1:
+    if st.button("Show Sources"):
+        show_sources()
+
+with col2:
+    if st.button("Clear Database"):
+        clear_database()
+            
 #Knowledge Garph View
-show_knowledge_graph()
+if st.button("Show Graph"):
+    show_knowledge_graph()
 
-
+        
 # Chat Bot
 st.title('Chat Bot 🤖')
 
@@ -110,7 +113,7 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# # Input field (pinned to bottom automatically)
+# Input field (pinned to bottom automatically)
 user_input = st.chat_input("Type your message...")
 
 
@@ -128,10 +131,11 @@ if user_input:
 
         # Add context to user query
         enriched_prompt = f"""
-            You are a helpful assistant. Use the following knowledge graph triples to help answer the user's question.
-            Only use the triples if they are relevant.
+            You are a helpful assistant. Use the following context to help answer the user's question.
+            Only use the context if it is relevant.
+            Summarize your answer in no more than 3 sentences.
 
-            Knowledge Triples:
+            Context:
             {context}
 
             User Question:
