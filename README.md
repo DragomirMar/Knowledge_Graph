@@ -37,6 +37,10 @@ pip install -r requirements.txt
 python main.py
 ```
 
+```bash
+streamlit run app.py
+```
+
 ## Run in virtual environment
 ```bash
 venv/bin/python main.py

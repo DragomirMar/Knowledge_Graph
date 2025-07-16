@@ -82,7 +82,7 @@ if st.button("Confirm URL"):
     else:
         st.warning("Please enter a valid URL.")
 
-
+# Buttons for database operations
 col1, col2 = st.columns([1,1]) 
 with col1:
     if st.button("Show Sources"):
