@@ -6,4 +6,7 @@ langchain_ollama
 langchain_chroma
 matplotlib
 pygraphviz
-streamlit
+streamlit #web UI
+streamlit_agraph #Graph Framework
+plotly
+pymongo #Database communication framework
