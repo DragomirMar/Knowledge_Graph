@@ -27,7 +27,7 @@ ollama pull llama3
 Download and install from the website https://www.mongodb.com/try/download/community.
 Run it with:
 ```bash
- mongod --dbpath ~/data/db'
+ mongod --dbpath ~/data/db
 ```
 
 ### 3. Clone this repo
