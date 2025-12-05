@@ -1,14 +1,14 @@
 from llama_index.llms.ollama import Ollama
-from typing import List, Tuple, Dict
+from typing import Dict
 import ast
-import requests
+import time
 import logging
 
 logger = logging.getLogger(__name__)
     
 class OllamaModel:
     def __init__(self):
-        self.llm = Ollama(model="llama3.1:8B", request_timeout=120.0, temperature=0.7)
+        self.llm = Ollama(model="llama3.1:8B", request_timeout=240.0, temperature=0.7)
     
     def inference(self, prompt_text):
         return self.llm.complete(prompt_text).text
@@ -69,18 +69,37 @@ class OllamaModel:
         Return ONLY the Python dictionary, no explanations or comments.
         """
         
-        try:
-            response = self.inference(prompt)
-            logger.info("Simultaneous extraction response: " + response)
+        max_retries = 3
+        
+        for attempt in range(max_retries):
+            try:
+                logger.info(f"Extraction attempt {attempt + 1}/{max_retries}")
+                
+                response = self.inference(prompt)
+                logger.info("Simultaneous extraction response: " + response)
+                
+                # Parse the response
+                result = ast.literal_eval(response.strip())
+                return result
             
-            # Parse the response
-            result = ast.literal_eval(response.strip())
+            except TimeoutError as e:
+                logger.warning(f"Attempt {attempt + 1} timed out")
+                
+                if attempt < max_retries - 1:  # If not the last attempt
+                    wait_time = 5 
+                    logger.info(f"Waiting {wait_time}s before retry...")
+                    time.sleep(wait_time) 
+                else:  # Last attempt failed
+                    logger.error(f"All {max_retries} attempts failed due to timeout")
+                    return {"entities": {}, "relationships": []}  
             
-            return result
+            except Exception as e:
+                logger.error(f"Attempt {attempt + 1} failed with error: {e}")
+                logger.error(f"Failed to extract knowledge simultaneously: {e}")
+                return {"entities": {}, "relationships": []}
             
-        except Exception as e:
-            logger.error(f"Failed to extract knowledge simultaneously: {e}")
-            return {"entities": {}, "relationships": []}
+        return {"entities": {}, "relationships": []}
+    
     
     def _validate_and_clean_extraction(self, result: Dict) -> Dict:
         """Validate and clean the extracted knowledge"""
