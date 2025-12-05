@@ -37,13 +37,22 @@ class GraphVisualizer:
                     "original_name": entity['name']
                 }
             
-            # Convert relationships to edges format
-            edges = []
+            # Convert relationships to edges format, grouping multiple predicates between same entities
+            edge_groups = defaultdict(list)
+
             for rel in relationships:
                 src_id = self._generate_node_id(rel['subject'])
                 tgt_id = self._generate_node_id(rel['object'])
-                edges.append((src_id, tgt_id, rel['predicate']))
-            
+                edge_groups[(src_id, tgt_id)].append(rel['predicate'])
+
+            edges = []
+            for (src_id, tgt_id), predicates in edge_groups.items():
+                label = "\n".join(
+                                  f"{p}," if i < len(predicates) - 1 else p
+                                    for i, p in enumerate(predicates)   
+                                  )   # multiline
+                edges.append((src_id, tgt_id, label))
+
             # Update session state
             st.session_state.graph_data.update({
                 "nodes": nodes,
