@@ -9,8 +9,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=800,
-    chunk_overlap=100,
+    chunk_size=1200,
+    chunk_overlap=200,
     separators=["\n\n", ". ", "! ", "? ", "; ", "\n", " "],
     add_start_index=False
 )
@@ -37,6 +37,10 @@ def extract_from_url(url):
     if not main:
         logger.warning("No <main> tag found, falling back to <article>")
         main = soup.find('article')
+        
+    if not main:
+        logger.warning("No <article> tag found, falling back to <body>")
+        main = soup.find('body')
     
     # 2. Remove unwanted elements 
     unwanted_tags = ['figure', 'figcaption', 'script', 'style', 'aside', 'noscript', 'footer']
@@ -61,12 +65,11 @@ def extract_from_url(url):
     text = " ".join(structured_parts)
 
     # 4. Clean whitespace
-    cleaned_text = ' '.join(text.split())
+    cleaned_text = clean_text_for_chunking(text)
     
     logger.info(f"Extracted and cleaned text: {cleaned_text}")
 
     # 5. Clean and Split into chunks
-    cleaned_text = clean_text_for_chunking(text)
     split_docs = text_splitter.create_documents([cleaned_text], metadatas=[{"source": url}])
     return split_docs
 
