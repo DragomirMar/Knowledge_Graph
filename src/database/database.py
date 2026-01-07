@@ -1,10 +1,45 @@
 from typing import List, Dict, Any
 from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
+from pathlib import Path
 
-client = MongoClient("mongodb://localhost:27017/")
-db = client["knowledge_graph"]
+# Get the project root directory to load .env
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+
+# Load environment variables based on ENVIRONMENT setting
+environment = os.getenv('ENVIRONMENT', 'production')
+
+if environment == 'test':
+    env_file = PROJECT_ROOT / '.env.test'
+    load_dotenv(env_file)
+    print(f"Loading TEST environment from: {env_file}")
+else:
+    env_file = PROJECT_ROOT / '.env'
+    load_dotenv(env_file) 
+    print(f"Loading PRODUCTION environment from: {env_file}")
+
+# Get configuration from environment variables
+MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
+MONGODB_DATABASE = os.getenv('MONGODB_DATABASE', 'knowledge_graph')
+
+print(f"Database: {MONGODB_DATABASE}")
+print(f"MongoDB URI: {MONGODB_URI}")
+
+# Connect to MongoDB
+client = MongoClient(MONGODB_URI)
+db = client[MONGODB_DATABASE]
 entities_collection = db["entities"]
 relationships_collection = db["relationships"]
+
+# Verify connection
+try:
+    client.admin.command('ping')
+    print(f"✓ Successfully connected to MongoDB database: {MONGODB_DATABASE}")
+except Exception as e:
+    print(f"✗ Failed to connect to MongoDB: {e}")
+    raise
+
 
 ### ENTITY DATABASE FUNCTIONS ###
 # CREATE

@@ -91,7 +91,7 @@ def extract_entities_and_relationships_from_chunks(chunks_url, llm: OllamaModel,
             logger.info("-" * 80)
     
     logger.info("*********** Cleaning and validating relationships ***********")
-    final_relationships = clean_and_validate_relationships(all_relationships, final_entities)
+    final_relationships = clean_and_validate_relationships(all_relationships)
     
     # Remove duplicate relationships
     unique_relationships = []
@@ -112,10 +112,9 @@ def extract_entities_and_relationships_from_chunks(chunks_url, llm: OllamaModel,
         "relationships": unique_relationships
     }
     
-def clean_and_validate_relationships(relationships, valid_entities):
+def clean_and_validate_relationships(relationships):
     """ Cleans and validates relationships by removing malformed ones: """
     cleaned_relationships = []
-    valid_entity_names = set(valid_entities.keys())
     
     for rel in relationships:
         try:
