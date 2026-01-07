@@ -2,7 +2,7 @@ from extract_text import *
 from llm import OllamaModel
 import logging
 import database as db
-from logger_config import setup_logging
+from configuration.logger_config import setup_logging
 import entity_manager as em
 from database_manager import DBManager as dbm
 

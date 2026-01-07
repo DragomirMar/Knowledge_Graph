@@ -54,8 +54,10 @@ class DBManager:
     @staticmethod
     def create_relationship(subject: str, predicate: str, obj: str) -> str:
         if not db.get_entity_by_name(subject):
+            return
             db.create_entity(subject, "")
         if not db.get_entity_by_name(obj):
+            return
             db.create_entity(obj, "")
         
         return db.create_relationship(subject, predicate, obj)
