@@ -9,7 +9,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 # Import database functions
-from database import (
+from database.database import (
     create_relationship, get_all_relationships, get_relationships_by_entity,
     get_relationship_count, update_relationship_subject, update_relationship_object,
     update_relationship_predicate, delete_relationship, delete_relationships_by_entity,

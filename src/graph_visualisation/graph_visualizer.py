@@ -5,11 +5,10 @@ from graph_visualisation.graph_builder import get_nodes_and_edges_from_db
 from graph_visualisation.graph_state import load_graph_into_session
 
 def create_agraph_elements(nodes, edges, selected=None):
-    """Create nodes and edges for streamlit-agraph"""
     nodes_list = []
     edges_list = []
     
-    # Create nodes with better colors for dark mode
+    # Nodes
     for node_id, props in nodes.items():
         if node_id == selected:
             color = "#FFD700"  # Node color
@@ -36,7 +35,7 @@ def create_agraph_elements(nodes, edges, selected=None):
         )
         nodes_list.append(node)
     
-    # Create edges with better visibility
+    # Edges
     for src, tgt, relation in edges:
         edge = Edge(
             source=src,
@@ -56,8 +55,6 @@ def create_agraph_elements(nodes, edges, selected=None):
     return nodes_list, edges_list
 
 def render_graph():
-    """Render the main graph visualization"""
-    # Ensure graph_data is initialized
     data = get_graph_data()
 
     if not data["nodes"]:
@@ -128,7 +125,7 @@ def render_graph():
         # Display the graph
         return_value = agraph(nodes=nodes, edges=edges, config=config)
         
-        # Handle node selection from graph clicks
+        # Node selection from graph clicks
         if return_value:
             data["selected_node"] = return_value
             st.rerun()
@@ -142,7 +139,6 @@ def render_graph():
 
 def render_mini_graph(center_entity_name):  
     """Render a smaller graph view focused on a specific entity"""
-    # Load data if not available
     data = get_graph_data()
     
     if not data["nodes"]:
@@ -178,17 +174,17 @@ def render_mini_graph(center_entity_name):
         return
     
     try:
-        # Create nodes (only connected ones) with better colors
+        # Create nodes connected to the center node
         nodes_list = []
         for node_id in connected_nodes:
             if node_id in data["nodes"]:
                 props = data["nodes"][node_id]
                 if node_id == center_node_id:
-                    color = "#FFD700"  # Gold for center
+                    color = "#FFD700"  # Main node
                     font_color = "#FFFFFF"
                     size = 35
                 else:
-                    color = "#4FC3F7"  # Light blue
+                    color = "#4FC3F7"
                     font_color = "#FFFFFF"
                     size = 25
                 
@@ -208,7 +204,7 @@ def render_mini_graph(center_entity_name):
                 )
                 nodes_list.append(node)
         
-        # Create edges (only relevant ones)
+        # Create edges connected to the center node
         edges_list = []
         for src, tgt, relation in relevant_edges:
             edge = Edge(

@@ -1,4 +1,4 @@
-import database as db
+import database.database as db
 import logging
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class DBManager:
 
     @staticmethod
     def update_entity_name(old_name: str, new_name: str) -> None:
-        """Update the name of an entity both in entities and relationships collection to keep it consistant."""
+        """Updates the name of an entity both in entities and relationships collection."""
         db.update_entity_name(old_name, new_name)
         db.update_relationship_object(old_name, new_name)
         db.update_relationship_subject(old_name, new_name)
@@ -55,9 +55,13 @@ class DBManager:
     def create_relationship(subject: str, predicate: str, obj: str) -> str:
         if not db.get_entity_by_name(subject):
             return
-            db.create_entity(subject, "")
+            # Strategy based on creation of new entities from relationship between entities that are not existing in the database.
+            # Turned off at the moment.
+            db.create_entity(subject, "") 
         if not db.get_entity_by_name(obj):
             return
+            # Strategy based on creation of new entities from relationship between entities that are not existing in the database.
+            # Turned off at the moment.
             db.create_entity(obj, "")
         
         return db.create_relationship(subject, predicate, obj)
@@ -69,7 +73,7 @@ class DBManager:
     
     @staticmethod
     def get_relationships_by_entity(entity_name: str) -> list:
-        """Get relationships where the entity is either subject or object."""
+        """Gets relationships where the entity is either subject or object."""
         return db.get_relationships_by_entity(entity_name)
     
     @staticmethod
@@ -90,11 +94,11 @@ class DBManager:
    # Delete
     @staticmethod
     def delete_relationship(subject: str, obj: str) -> None:
-        """Delete a relationship by subject and object."""
+        """Deletes a relationship by subject and object."""
         db.delete_relationship(subject, obj)
     @staticmethod
     def delete_relationships_by_entity(entity_name: str) -> None:
-        """Delete all relationships connected to the selected entity."""
+        """Deletes all relationships connected to the selected entity."""
         db.delete_relationships_by_entity(entity_name)
     @staticmethod
     def drop_collection_relationships() -> None:

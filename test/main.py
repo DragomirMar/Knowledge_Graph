@@ -1,10 +1,10 @@
-from extract_text import *
+from services.extract_text import *
 from llm import OllamaModel
 import logging
-import database as db
+import database.database as db
 from configuration.logger_config import setup_logging
 import entity_manager as em
-from database_manager import DBManager as dbm
+from database.database_manager import DBManager as dbm
 
 """A Class testing the functionality of the Knowledge Graph application without the streamlit interface."""
 

@@ -14,7 +14,7 @@ class OllamaModel:
         return self.llm.complete(prompt_text).text
 
     def extract_knowledge_simultaneously(self, text_chunk: str) -> Dict:
-        """Extract entities and relationships in a single pass with cross-validation"""
+        """Extracts entities and relationships in a single pass with cross-validation"""
         
         prompt = f"""
         You are an expert knowledge extraction system. Your task is to extract comprehensive entities with detailed descriptions AND meaningful relationships from the text.

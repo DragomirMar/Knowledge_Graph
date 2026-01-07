@@ -1,5 +1,5 @@
 import streamlit as st
-from database_manager import DBManager as dbm
+from database.database_manager import DBManager as dbm
 from app_pages import browse_page, entity_page, graph_page, upload_page
 
 from configuration.logger_config import setup_logging
@@ -7,7 +7,6 @@ setup_logging()
 
 st.set_page_config(
     page_title="Knowledge Graph",
-    page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -72,33 +71,3 @@ elif page == "🔍 Browse Entities":
     browse_page.render_page()
 elif page == "📊 Knowledge Graph":
     graph_page.render_page()
-
-# Custom CSS for better styling
-# st.markdown("""
-# <style>
-#     .stButton > button {
-#         width: 100%;
-#     }
-    
-#     .metric-container {
-#         background-color: #f0f2f6;
-#         padding: 10px;
-#         border-radius: 5px;
-#         margin: 5px 0;
-#     }
-    
-#     .entity-card {
-#         border: 1px solid #ddd;
-#         border-radius: 10px;
-#         padding: 15px;
-#         margin: 10px 0;
-#         background-color: #f9f9f9;
-#         transition: all 0.3s ease;
-#     }
-    
-#     .entity-card:hover {
-#         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-#         transform: translateY(-2px);
-#     }
-# </style>
-# """, unsafe_allow_html=True)

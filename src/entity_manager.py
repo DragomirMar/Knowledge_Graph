@@ -6,14 +6,10 @@ from llm import OllamaModel
 logger = logging.getLogger(__name__)
 
 def merge_entity_descriptions(descriptions_list):
-    """
-    Merge multiple descriptions for an entity into one coherent paragraph.
-    Removes duplicates and creates a clean combined description.
-    """
+    """ Merges multiple descriptions of entities with the same name, removing duplicates. """
     if not descriptions_list:
         return ""
-    
-    # Split all descriptions into sentences
+
     all_sentences = []
     for desc in descriptions_list:
         if desc and desc.strip():
@@ -26,7 +22,7 @@ def merge_entity_descriptions(descriptions_list):
                 if sentence and len(sentence) > 10:  # Ignore very short fragments
                     all_sentences.append(sentence)
     
-    # Remove duplicates while preserving order
+    # Remove duplicates
     seen = set()
     unique_sentences = []
     for sentence in all_sentences:
@@ -36,22 +32,17 @@ def merge_entity_descriptions(descriptions_list):
             seen.add(normalized)
             unique_sentences.append(sentence)
     
-    # Join sentences back together
+    # Join sentences again
     if unique_sentences:
         return ". ".join(unique_sentences) + "."
     return ""
 
 def extract_entities_and_relationships_from_chunks(chunks_url, llm: OllamaModel, max_chunks=None):
-    """
-    Extract entities and relationships from chunks, combining descriptions for duplicate entities
-    and cleaning/validating relationships.
-    max_chunks: Optional[int] - Limit the number of chunks to process (mainly for testing purposes), 
-    I test it with 5 chunks max because of my machines capabilities
-    """
+    """ Extracts entities and relationships from chunks, combining descriptions for duplicate entities and cleaning/validating relationships."""
     entity_dict = defaultdict(list)
     all_relationships = []
     
-    # Limit chunks if specified
+    # Limit chunks if specified (used for testing or on machines with limited resources). I tested it with 5 chunks max because of my machines capabilities
     chunks_to_process = chunks_url[:max_chunks] if max_chunks else chunks_url
     
     logger.info(f"Processing {len(chunks_to_process)} chunks for entity extraction")
@@ -69,12 +60,10 @@ def extract_entities_and_relationships_from_chunks(chunks_url, llm: OllamaModel,
             entities_dict = entities_relationships_dict.get("entities", {})
             relationships = entities_relationships_dict["relationships"]
                 
-            for name, description in entities_dict.items():                    
-                # Add description to the list for this entity
+            for name, description in entities_dict.items():  
                 entity_dict[name].append(description.strip())
                     
                 logger.info(f"Chunk {i} - Entity: {name}, Description: {description}")
-                
             
             # Collect relationships
             if relationships:
@@ -124,18 +113,13 @@ def extract_entities_and_relationships_from_chunks(chunks_url, llm: OllamaModel,
     }
     
 def clean_and_validate_relationships(relationships, valid_entities):
-    """
-    Clean and validate relationships by removing malformed ones:
-    - Less than 3 elements in tuple
-    - Empty subject or object
-    - None values in subject or object
-    """
+    """ Cleans and validates relationships by removing malformed ones: """
     cleaned_relationships = []
     valid_entity_names = set(valid_entities.keys())
     
     for rel in relationships:
         try:
-            # Ensure tuple has exactly 3 elements
+            # Make sure tuple has exactly 3 elements
             if not isinstance(rel, (tuple, list)) or len(rel) != 3:
                 logger.warning(f"Skipping malformed relationship (not 3 elements): {rel}")
                 continue
@@ -152,15 +136,13 @@ def clean_and_validate_relationships(relationships, valid_entities):
             predicate = str(predicate).strip() if predicate is not None else ""
             obj = str(obj).strip() if obj is not None else ""
             
-            # Skip empty subject or object (predicate can be empty)
+            # Skip empty subject or object
             if not subject or not obj:
                 logger.warning(f"Skipping relationship with empty subject or object: {rel}")
                 continue
             
-            # Create cleaned relationship tuple
             cleaned_rel = (subject, predicate, obj)
             
-            # Avoid duplicate relationships
             if cleaned_rel not in cleaned_relationships:
                 cleaned_relationships.append(cleaned_rel)
                 logger.info(f"Added relationship: {cleaned_rel}")

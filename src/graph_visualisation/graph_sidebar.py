@@ -1,10 +1,9 @@
 import streamlit as st
-from database_manager import DBManager as dbm
+from database.database_manager import DBManager as dbm
 from collections import defaultdict, deque
 from graph_visualisation.graph_state import get_graph_data
 
 def show_node_editor():
-    """Show node editor in sidebar"""
     data = get_graph_data()
     
     if not data["nodes"]:
@@ -12,10 +11,10 @@ def show_node_editor():
         return
     
     st.sidebar.markdown("### Node Editor")
-    # Create a dropdown to select nodes
+    # Dropdown for node selection
     node_options = {"None": None}
     for node_id, props in data["nodes"].items():
-        node_options[props['label']] = node_id   # label → id map
+        node_options[props['label']] = node_id  
 
     selected_label = st.sidebar.selectbox("Select node to edit:", list(node_options.keys()))
     node_id = node_options[selected_label]
@@ -27,7 +26,6 @@ def show_node_editor():
         data["selected_node"] = None
 
 def render_node_editor(node_id):
-    """Render the node editing form"""
     data = get_graph_data()
     
     if node_id not in data["nodes"]:
@@ -100,7 +98,6 @@ def find_connected_components( ):
     return components
             
 def show_graph_statistics( ):
-    # Ensure graph_data is initialized
     data = get_graph_data()
     
     st.sidebar.markdown("### Graph Statistics")

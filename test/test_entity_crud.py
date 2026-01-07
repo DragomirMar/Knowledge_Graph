@@ -9,7 +9,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 # Import database functions
-from database import (
+from database.database import (
     create_entity, get_all_entities, get_entity_by_name, 
     get_entity_count, update_entity_description, 
     update_entity_name, delete_entity

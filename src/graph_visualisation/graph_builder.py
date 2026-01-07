@@ -1,15 +1,14 @@
 from collections import defaultdict
-from database_manager import DBManager as dbm
+from database.database_manager import DBManager as dbm
 import hashlib
 
 def generate_node_id( name):
-    # Simple approach: use first 3 chars + hash to avoid collisions
+    # First 3 chars + hash 
     hash_suffix = hashlib.md5(name.encode()).hexdigest()[:4]
     clean_name = "".join(c.lower() for c in name if c.isalnum())[:6]
     return f"{clean_name}_{hash_suffix}"
 
 def get_nodes_and_edges_from_db():
-    # Get all entities and relationships
     entities = dbm.get_all_entities()
     relationships = dbm.get_all_relationships()
     
@@ -36,7 +35,7 @@ def get_nodes_and_edges_from_db():
         label = "\n".join(
                             f"{p}," if i < len(predicates) - 1 else p
                             for i, p in enumerate(predicates)   
-                            )   # multiline
+                            ) 
         edges.append((src_id, tgt_id, label))
         
     return nodes, edges

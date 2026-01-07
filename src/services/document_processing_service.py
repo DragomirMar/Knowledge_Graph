@@ -1,10 +1,10 @@
 
 from io import BytesIO
 import logging
-from extract_text import extract_from_url, extract_from_pdf
+from services.extract_text import extract_from_url, extract_from_pdf
 from llm import OllamaModel
 import entity_manager as em
-from database_manager import DBManager as dbm
+from database.database_manager import DBManager as dbm
 
 logger = logging.getLogger(__name__)
 

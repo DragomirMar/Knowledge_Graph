@@ -114,14 +114,14 @@ def update_relationship_predicate(subject: str, object: str, new_predicate: str)
     
 # DELETE
 def delete_relationship(subject: str, obj: str) -> None:
-    """Delete a relationship by subject and object"""
+    """Deletes a relationship by subject and object"""
     return relationships_collection.delete_one({
         "subject": subject.strip().title(),
         "object": obj.strip().title()
     })
     
 def delete_relationships_by_entity(entity_name: str) -> None:
-    """Delete all relationships where the entity is either a subject or an object"""
+    """Deletes all relationships where the entity is either a subject or an object"""
     relationships_collection.delete_many({
         "$or": [
             {"subject": entity_name.strip().title()},

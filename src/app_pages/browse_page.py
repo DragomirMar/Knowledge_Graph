@@ -1,5 +1,5 @@
 import streamlit as st
-from database_manager import DBManager as dbm
+from database.database_manager import DBManager as dbm
 
 def create_entity_creation_form():
     st.subheader("Add New Entity")
@@ -12,7 +12,7 @@ def create_entity_creation_form():
             entity_description = st.text_area("Description", placeholder="Enter entity description...", height=100)
         
         with col2:
-            st.write("")  # Space
+            st.write("")  # Empty space for alignment
             submitted = st.form_submit_button("Add Entity", type="primary", use_container_width=True)
         
         if submitted:
@@ -45,8 +45,7 @@ def render_page():
         search_query = st.text_input("🔍 Search entities...", placeholder="Type to search entities")
 
     with col_delete:
-        # Add empty space to align with the text input
-        st.write("")
+        st.write("") # Empty space to align with the text input
         
         if 'confirm_delete' not in st.session_state:
             st.session_state.confirm_delete = False

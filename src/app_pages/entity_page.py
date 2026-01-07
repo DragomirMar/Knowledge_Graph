@@ -1,6 +1,6 @@
 import streamlit as st
 import logging
-from database_manager import DBManager as dbm
+from database.database_manager import DBManager as dbm
 from graph_visualisation.graph_visualizer import render_mini_graph
 
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ def show_relationship_creation_form(current_entity_name):
         st.error(f"Error loading entities: {str(e)}")
         return
     
-    # Create radio button outside the form so it shows object type options 
+    # Radio button outside the form so it shows object type options 
     relationship_type = st.radio(
         "Object Type:", 
         ["Existing Entity", "New Entity"], 
@@ -89,7 +89,7 @@ def render_page():
                 new_description = st.text_area("Description", value=entity['description'], height=100)
             
             with col2:
-                st.write("")  # Space
+                st.write("")  # Empty space for alignment
                 if st.button("💾 Save Changes", type="primary"):
                     try:
                         if new_name != entity['name']:
@@ -132,12 +132,12 @@ def render_page():
                             st.session_state.confirm_delete_entity = False
                             st.rerun()
         
-        # Add new relationship section
+        # New relationship section
         st.markdown("---")
         with st.expander("➕ Add New Relationship"):
             show_relationship_creation_form(entity_name)
             
-        # Relationships section
+        # Existing relationships section
         st.markdown("---")
         st.subheader("🔗 Existing Relationships")
         

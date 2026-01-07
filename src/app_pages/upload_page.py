@@ -6,6 +6,7 @@ def render_page():
 
     col1, col2 = st.columns(2)
     
+    # PDF Upload Section 
     with col1:
         st.subheader("📄 Upload PDF Files")
         uploaded_files = st.file_uploader(
@@ -31,6 +32,7 @@ def render_page():
                         st.session_state.uploaded_documents.remove(doc)
                         st.rerun()            
     
+    # URL Upload Section
     with col2:
         st.subheader("🌐 Add URLs")
         url_input = st.text_input("Enter URL", placeholder="https://example.com/article")
@@ -56,10 +58,10 @@ def render_page():
                         st.session_state.uploaded_urls.remove(url)
                         st.rerun()
     
-    # Processing section
     st.markdown("---")
     col_process, col_clear = st.columns([2, 1])
     
+    # Processing section
     with col_process:
         if st.button("🚀 Process All Documents", type="primary", use_container_width=True):
             if st.session_state.uploaded_documents or st.session_state.uploaded_urls:
