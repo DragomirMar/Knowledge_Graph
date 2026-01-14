@@ -60,8 +60,6 @@ target/
 .ipynb_checkpoints
 
 # Environments
-.env
-.env.test
 .venv
 env/
 venv/
