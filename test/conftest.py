@@ -3,16 +3,14 @@ import logging
 import sys
 import os
 
-# CRITICAL: Set test environment BEFORE any imports
+# IMPORTANT: Set test environment BEFORE any imports
 os.environ['ENVIRONMENT'] = 'test'
-
-# Add src to path 
+ 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 from database.database_manager import DBManager as dbm
 import database.database as db
 
-# Configure logging for all tests
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -32,7 +30,7 @@ def pytest_configure(config):
         "markers", "unit: marks tests as unit tests"
     )
     
-    # Verify test database
+    # Database verification
     logger.info("="*60)
     logger.info("PYTEST CONFIGURATION")
     logger.info("="*60)
@@ -41,7 +39,7 @@ def pytest_configure(config):
     logger.info(f"Database name: {db.db.name}")
     logger.info("="*60)
 
-    # Safety check!
+    # Safety check
     assert "test" in db.db.name.lower(), \
         f"WARNING: Not using test database! Current: {db.db.name}"
     logger.info("✓ Safety check passed: Using test database")
