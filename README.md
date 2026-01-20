@@ -34,10 +34,10 @@ Download and install Ollama, which is required to run models locally.
 - For **Ubuntu** use the command:
 ```curl -fsSL https://ollama.com/install.sh | sh ```
 
-#### Pull LLaMA 3.1
+#### Pull LLaMA 3.1:8B
 Once Ollama is installed, pull the LLaMA 3.1 model (or another model you prefer):
 ```bash
-ollama pull llama3.1
+ollama pull llama3.1:8b
 ```
 
 ### 2. Install MongoDB
@@ -124,7 +124,16 @@ source venv/bin/activate
 pip install -r requirements.txt 
 ```
 
-**Note:** If pip is still using the global environment, run:
+**Note:** If you encounter problem with the package `pygraphviz`, run:
+```bash
+sudo apt update
+sudo apt install -y python<your_python_version>-dev build-essential graphviz graphviz-dev pkg-config
+```
+After that, try installing `requirements.txt` again.
+
+`pygraphviz` compiles native C code, so it requires the appropriate development tools and Graphviz headers to be installed on your system.
+
+**Note 2:** If pip is still using the global environment, run:
 ```bash
 unalias pip
 ```
