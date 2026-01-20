@@ -8,7 +8,13 @@ logger = logging.getLogger(__name__)
     
 class OllamaModel:
     def __init__(self):
-        self.llm = Ollama(model="llama3.1:8B", request_timeout=240.0, temperature=0.7)
+        self.llm = Ollama(model="llama3.1:8B",
+         request_timeout=240.0,
+         temperature=0.7,
+         additional_kwargs={
+            "num_ctx": 4096
+            }
+         )
     
     def inference(self, prompt_text):
         return self.llm.complete(prompt_text).text
