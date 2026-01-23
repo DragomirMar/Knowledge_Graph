@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
     
 class OllamaModel:
     def __init__(self):
-        self.llm = Ollama(model="llama3.1:8B",
+        self.llm = Ollama(model="llama3.1:8b",
          request_timeout=240.0,
          temperature=0.7,
          additional_kwargs={
@@ -88,21 +88,17 @@ class OllamaModel:
                 result = ast.literal_eval(response.strip())
                 return result
             
-            except TimeoutError as e:
-                logger.warning(f"Attempt {attempt + 1} timed out")
+            except Exception as e:
+                logger.warning(f"Attempt {attempt + 1} failed because of: {e}")
                 
                 if attempt < max_retries - 1:  # If not the last attempt
                     wait_time = 5 
                     logger.info(f"Waiting {wait_time}s before retry...")
                     time.sleep(wait_time) 
+                    logger.info(f"Retrying...")
                 else:  # Last attempt failed
                     logger.error(f"All {max_retries} attempts failed due to timeout")
                     return {"entities": {}, "relationships": []}  
-            
-            except Exception as e:
-                logger.error(f"Attempt {attempt + 1} failed with error: {e}")
-                logger.error(f"Failed to extract knowledge simultaneously: {e}")
-                return {"entities": {}, "relationships": []}
             
         return {"entities": {}, "relationships": []}
     
