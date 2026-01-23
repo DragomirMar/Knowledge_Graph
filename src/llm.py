@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class OllamaModel:
     def __init__(self):
         self.llm = Ollama(model="llama3.1:8b",
-         request_timeout=240.0,
+         request_timeout=360.0,
          temperature=0.7,
          additional_kwargs={
             "num_ctx": 4096
