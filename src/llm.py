@@ -10,7 +10,7 @@ class OllamaModel:
     def __init__(self):
         self.llm = Ollama(model="llama3.1:8b",
          request_timeout=360.0,
-         temperature=0.7,
+         temperature=0.5,
          additional_kwargs={
             "num_ctx": 4096
             }
@@ -46,7 +46,8 @@ class OllamaModel:
         \"\"\"
 
         CRITICAL REQUIREMENTS:
-        1. Entity descriptions must be detailed and context-rich (10 words minimum)
+        1. Entity descriptions must be detailed and only include information explicitly present in the text.
+            Do not assume, infer, or add facts not stated in the text.(10 words minimum, strictly based on text)
         2. Use consistent entity names throughout (prefer full names over nicknames)
         2.1. if an entity name is a synonim or abreviation for another entity name make a relationship showing it 
         3. Extract 12-15 entities maximum for quality over quantity
@@ -65,10 +66,10 @@ class OllamaModel:
         Return format (EXACT structure required):
         {{
             "entities": {{
-                "Primary Entity Name": "Detailed description with context from the text, including role, significance, and relevant details mentioned"
+                "Primary Entity Name": "Detailed description with context only from the text, including role, significance, and relevant details mentioned"
             }},
             "relationships": [
-                ("Subject Entity", "specific relationship verb/phrase", "Object Entity")
+                ("Subject Entity", "verb/phrase", "Object Entity")
             ]
         }}
         
