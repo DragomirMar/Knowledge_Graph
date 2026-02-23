@@ -1,6 +1,17 @@
 import streamlit as st
 from services.document_processing_service import process_documents
 
+
+if "uploaded_documents" not in st.session_state:
+    st.session_state.uploaded_documents = []
+
+if "uploaded_urls" not in st.session_state:
+    st.session_state.uploaded_urls = []
+
+if "uploader_key" not in st.session_state:
+    st.session_state.uploader_key = 0
+
+
 def render_page():
     st.title("📤 Upload Documents")
 
@@ -13,7 +24,7 @@ def render_page():
             "Choose PDF files",
             type=['pdf'],
             accept_multiple_files=True,
-            key="pdf_uploader"
+            key=f"pdf_uploader_{st.session_state.uploader_key}"
         )
         
         if uploaded_files:
@@ -23,14 +34,19 @@ def render_page():
         
         if st.session_state.uploaded_documents:
             st.success(f"📁 {len(st.session_state.uploaded_documents)} PDF file(s) ready for processing")
+
             for i, doc in enumerate(st.session_state.uploaded_documents):
                 col_name, col_remove = st.columns([3, 1])
                 with col_name:
                     st.write(f"• {doc.name}")
                 with col_remove:
                     if st.button("❌", key=f"remove_pdf_{i}"):
-                        st.session_state.uploaded_documents.remove(doc)
-                        st.rerun()            
+                        # Remove from our list
+                        st.session_state.uploaded_documents.pop(i)
+
+                        # Force reset of file uploader widget
+                        st.session_state.uploader_key += 1
+                        st.rerun()           
     
     # URL Upload Section
     with col2:
@@ -91,4 +107,7 @@ def render_page():
         if st.button("🗑️ Clear All", use_container_width=True):
             st.session_state.uploaded_documents = []
             st.session_state.uploaded_urls = []
+            
+            # Reset uploader
+            st.session_state.uploader_key += 1
             st.rerun()
